@@ -1,13 +1,19 @@
 package com.uomaep.db.controller
 
+import com.uomaep.db.dto.UserRegisterDTO
+import com.uomaep.db.service.UserService
+import com.uomaep.db.utils.CsrfUtil
+import com.uomaep.db.utils.encodeURL
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/user")
-class UserController {
+class UserController(val userService: UserService) {
     @GetMapping("/login")
     fun login(): String {
         return "user/login"
@@ -23,5 +29,26 @@ class UserController {
     @GetMapping("/register")
     fun register(): String {
         return "user/register"
+    }
+
+    @PostMapping("/register")
+    fun handleRegister(
+        reqBody: UserRegisterDTO,
+        req: HttpServletRequest,
+        session: HttpSession
+    ): String {
+        if(reqBody.password != reqBody.checkPassword) {
+            return "redirect:/user/register?msg=${"비밀번호가 일치하지 않습니다.".encodeURL()}"
+        }
+        if(CsrfUtil.isValid(reqBody.csrf, session, true)) {
+            return "redirect:/user/register?msg=${"잘못된 CSRF 토큰입니다.".encodeURL()}"
+        }
+
+        val newUser = userService.register(reqBody.account, reqBody.password)
+        if(newUser.isFailure) {
+            return "redirect:/user/register?msg=${"회원가입 실패".encodeURL()}"
+        }
+
+        return "redirect:/user/login?msg=${"회원가입 성공".encodeURL()}"
     }
 }

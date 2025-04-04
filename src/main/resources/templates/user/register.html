@@ -31,13 +31,16 @@
             <label for="password">비밀번호</label><br>
             <input type="password" id="password" name="password" required /><br>
             <label for="password">비밀번호확인</label><br>
-            <input type="password" id="re-password" name="re-password" required /><br><br>
+            <input type="password" id="checkPassword" name="checkPassword" required /><br><br>
             <input type="hidden" name="csrf" th:value="${csrf}" />
             <button type="submit">가입</button><br><br>
         </form>
     </div>
-    <script th:if="${error_msg != null}" th:inline="javascript">
-        alert([[${error_msg}]]);
+    <script>
+        const params = new URLSearchParams(window.location.search)
+        const msg = params.get("msg")
+        if(msg)
+            alert(decodeURIComponent(msg));
     </script>
 </body>
 </html>

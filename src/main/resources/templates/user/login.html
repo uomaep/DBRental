@@ -38,8 +38,11 @@
             <a href="/user/register">회원가입</a>
         </form>
     </div>
-    <script th:if="${error_msg != null}" th:inline="javascript">
-        alert([[${error_msg}]]);
+    <script>
+        const params = new URLSearchParams(window.location.search)
+        const msg = params.get("msg")
+        if(msg)
+            alert(decodeURIComponent(msg));
     </script>
 </body>
 </html>
