@@ -31,18 +31,11 @@ class UserController(
         session: HttpSession
     ): String {
         val result = userService.login(reqBody.account, reqBody.password)
-        if(result.isFailure) {
-            return "redirect:/user/login?msg=" + result.exceptionOrNull()?.message
-        }
+        if(result.isFailure)
+            return "redirect:/user/login?msg=${"로그인 실패".encodeURL()}"
 
-        if(result.isSuccess) {
-            req.session.setAttribute("user", result.getOrThrow())
-            return "redirect:/"
-        } else {
-            result.exceptionOrNull()?.printStackTrace()
-        }
-
-        return "redirect:/user/login"
+        req.session.setAttribute("user", result.getOrThrow())
+        return "redirect:/"
     }
 
     @GetMapping("/logout")
