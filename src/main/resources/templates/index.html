@@ -18,20 +18,26 @@
             <div>password: 계정 패스워드</div>
         </div>
         <br>
+        <div th:if="${isAdmin}" style="border: 1px solid gray; padding: 4px; margin-bottom: 4px;">
+            <h3>관리자 기능</h3>
+            <button onclick="blockSignup()">회원가입 막기</button>
+            <button onclick="blockLogin()">로그인 막기</button>
+            <button onclick="blockDatabase()">데이터베이스 막기</button>
+        </div>
         <form id="createForm">
             <label for="databaseName">데이터베이스 이름: </label>
             <input type="text" id="databaseName" name="databaseName" />
             <button type="submit">생성하기</button>
         </form>
         <ul>
-            <li th:each="info: ${databases}">
+            <li th:each="info: ${databases}" th:attr="data-id=${info.id}, data-name=${info.databaseName}">
                 <span th:text="${info.databaseName}"></span>
-                <button>삭제</button>
+                <button onclick="dropDatabase(this)">삭제</button>
             </li>
         </ul>
     </div>
 
-    <script>
+    <script th:inline="javascript">
         document.getElementById("createForm").addEventListener("submit", function(e) {
             e.preventDefault(); // 폼 기본 제출 막기
 
@@ -58,6 +64,52 @@
                     console.error(err);
                 });
         });
+
+        function dropDatabase(button) {
+            const li = button.closest("li");
+            const id = li.dataset.id;
+            const name = li.dataset.name;
+            const userId = [[${userId}]];
+
+            if (!confirm(`정말 데이터베이스 '${name}'을 삭제하시겠습니까?`)) return;
+
+            fetch("/database/drop", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: id,
+                    databaseName: name,
+                    userId: userId
+                })
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result === true) {
+                        alert(`'${name}' 데이터베이스가 삭제되었습니다.`);
+                        li.remove(); // 화면에서 해당 항목 제거
+                    } else {
+                        alert("삭제에 실패했습니다.");
+                    }
+                })
+                .catch(err => {
+                    alert("서버 오류가 발생했습니다.");
+                    console.error(err);
+                });
+        }
+
+        function blockSignup() {
+            alert("회원가입 차단 요청 보냄 (TODO: 구현 필요)");
+            // fetch("/admin/block-signup", { method: "POST" }) ...
+        }
+        function blockLogin() {
+            alert("로그인 차단 요청 보냄 (TODO: 구현 필요)");
+        }
+        function blockDatabase() {
+            alert("데이터베이스 차단 요청 보냄 (TODO: 구현 필요)");
+        }
+
     </script>
 </body>
 </html>

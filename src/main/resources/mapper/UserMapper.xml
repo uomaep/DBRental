@@ -25,4 +25,7 @@
         values(#{databaseName}, #{userId})
     </insert>
 
+    <delete id="deleteDatabase">
+        delete from `db-rental`.`user_database` where id = #{databaseId} and user_id = #{userId};
+    </delete>
 </mapper>

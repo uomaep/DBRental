@@ -2,6 +2,7 @@ package com.uomaep.db.service
 
 import com.uomaep.db.dto.DBCreateUserDTO
 import com.uomaep.db.dto.UserDTO
+import com.uomaep.db.dto.UserDatabaseDTO
 import com.uomaep.db.mapper.MySQLMapper
 import com.uomaep.db.mapper.UserMapper
 import org.springframework.stereotype.Service
@@ -33,6 +34,13 @@ class DatabaseService(
             userMapper.insertDatabase(databaseName, user.id!!)
             mysqlMapper.createDatabase(databaseName)
             mysqlMapper.grantPermission(databaseName, user.account)
+        }
+    }
+
+    fun drop(database: UserDatabaseDTO): Result<Unit> {
+        return Result.runCatching {
+            userMapper.deleteDatabase(database.id!!, database.userId!!)
+            mysqlMapper.dropDatabase(database.databaseName!!)
         }
     }
 

@@ -12,4 +12,5 @@ interface MySQLMapper {
     fun isExistsDatabase(databaseName: String): Boolean
     fun createDatabase(databaseName: String): Int
     fun grantPermission(databaseName: String, account: String)
+    fun dropDatabase(databaseName: String)
 }

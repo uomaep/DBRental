@@ -22,4 +22,8 @@
     <update id="grantPermission">
         grant all privileges on `${databaseName}`.* to `${account}`@`%`;
     </update>
+
+    <update id="dropDatabase">
+        drop database `${databaseName}`;
+    </update>
 </mapper>

@@ -13,4 +13,5 @@ interface UserMapper {
     fun selectDatabaseByUserId(userId: Int): List<UserDatabaseDTO>
     fun selectDatabaseByDatabaseName(databaseName: String): UserDatabaseDTO?
     fun insertDatabase(databaseName: String, userId: Int): Int
+    fun deleteDatabase(databaseId: Int, userId: Int): Int
 }
