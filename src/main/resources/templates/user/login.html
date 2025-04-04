@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>DB 대여 시스템</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            border: 1px solid gray;
+            border-radius: 4px;
+            padding: 4px;
+        }
+    </style>
 </head>
 <body>
-    로그인 페이지
+    <div class="container">
+        <form action="/user/login" method="POST">
+            <h2>로그인</h2>
+            <label for="account">계정</label><br>
+            <input type="text" id="account" name="account" required /><br>
+            <label for="password">비밀번호</label><br>
+            <input type="password" id="password" name="password" required /><br><br>
+            <input type="hidden" name="csrf" th:value="${csrf}" />
+            <button type="submit">로그인</button><br><br>
+            <a href="/user/register">회원가입</a>
+        </form>
+    </div>
+    <script th:if="${error_msg != null}" th:inline="javascript">
+        alert([[${error_msg}]]);
+    </script>
 </body>
 </html>
