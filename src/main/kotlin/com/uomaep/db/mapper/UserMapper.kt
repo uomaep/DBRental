@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserMapper {
     fun insertUser(user: UserDTO): Int
+    fun selectUserByAccount(account: String): UserDTO?
 }

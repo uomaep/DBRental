@@ -20,12 +20,18 @@ class UserService(val userMapper: UserMapper) {
         }
     }
 
-    fun register(
-        account: String,
-        password: String,
-    ): Result<UserDTO> {
+    fun register(account: String, password: String): Result<UserDTO> {
         val hashedPassword = hashPassword(password)
         val createdId = userMapper.insertUser(UserDTO(null, account,  hashedPassword, LocalDateTime.now()))
         return Result.success(UserDTO(createdId, account, hashedPassword, null))
+    }
+
+    fun login(account: String, password: String): Result<UserDTO> {
+        val hashedPassword = hashPassword(password)
+        val target = userMapper.selectUserByAccount(account)
+        if(target == null || target.password != hashedPassword)
+            return Result.failure(Exception("로그인 실패"))
+
+        return Result.success(target)
     }
 }

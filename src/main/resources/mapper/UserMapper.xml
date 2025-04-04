@@ -4,7 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.uomaep.db.mapper.UserMapper">
     <insert id="insertUser">
-        insert into user(account, password, created_at)
+        insert into `db-rental`.`user`(account, password, created_at)
         values(#{account}, #{password}, #{createdAt})
     </insert>
+
+    <select id="selectUserByAccount" resultType="com.uomaep.db.dto.UserDTO">
+        select * from `db-rental`.`user` where account = #{account};
+    </select>
 </mapper>

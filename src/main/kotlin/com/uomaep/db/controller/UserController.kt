@@ -1,10 +1,10 @@
 package com.uomaep.db.controller
 
 import com.uomaep.db.dto.DBCreateUserDTO
+import com.uomaep.db.dto.UserLoginDTO
 import com.uomaep.db.dto.UserRegisterDTO
 import com.uomaep.db.service.DatabaseService
 import com.uomaep.db.service.UserService
-import com.uomaep.db.utils.CsrfUtil
 import com.uomaep.db.utils.encodeURL
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpSession
@@ -24,10 +24,30 @@ class UserController(
         return "user/login"
     }
 
+    @PostMapping("/login")
+    fun handleLogin(
+        reqBody: UserLoginDTO,
+        req: HttpServletRequest,
+        session: HttpSession
+    ): String {
+        val result = userService.login(reqBody.account, reqBody.password)
+        if(result.isFailure) {
+            return "redirect:/user/login?msg=" + result.exceptionOrNull()?.message
+        }
+
+        if(result.isSuccess) {
+            req.session.setAttribute("user", result.getOrThrow())
+            return "redirect:/"
+        } else {
+            result.exceptionOrNull()?.printStackTrace()
+        }
+
+        return "redirect:/user/login"
+    }
+
     @GetMapping("/logout")
     fun logout(req: HttpServletRequest): String {
         req.session.removeAttribute("user")
-
         return "redirect:/user/login"
     }
 
@@ -44,9 +64,6 @@ class UserController(
     ): String {
         if(reqBody.password != reqBody.checkPassword) {
             return "redirect:/user/register?msg=${"비밀번호가 일치하지 않습니다.".encodeURL()}"
-        }
-        if(CsrfUtil.isValid(reqBody.csrf, session, true)) {
-            return "redirect:/user/register?msg=${"잘못된 CSRF 토큰입니다.".encodeURL()}"
         }
 
         val newUser = userService.register(reqBody.account, reqBody.password)
