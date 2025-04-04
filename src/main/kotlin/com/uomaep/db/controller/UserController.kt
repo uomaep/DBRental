@@ -1,6 +1,8 @@
 package com.uomaep.db.controller
 
+import com.uomaep.db.dto.DBCreateUserDTO
 import com.uomaep.db.dto.UserRegisterDTO
+import com.uomaep.db.service.DatabaseService
 import com.uomaep.db.service.UserService
 import com.uomaep.db.utils.CsrfUtil
 import com.uomaep.db.utils.encodeURL
@@ -13,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/user")
-class UserController(val userService: UserService) {
+class UserController(
+    val userService: UserService,
+    val databaseService: DatabaseService
+) {
     @GetMapping("/login")
     fun login(): String {
         return "user/login"
@@ -48,6 +53,9 @@ class UserController(val userService: UserService) {
         if(newUser.isFailure) {
             return "redirect:/user/register?msg=${"회원가입 실패".encodeURL()}"
         }
+
+        if(Result.runCatching { databaseService.createUser(DBCreateUserDTO(reqBody.account, reqBody.password)) }.isFailure)
+            return "redirect:/user/register?msg?=${"회원가입 실패".encodeURL()}"
 
         return "redirect:/user/login?msg=${"회원가입 성공".encodeURL()}"
     }
