@@ -1,6 +1,7 @@
 package com.uomaep.db.service
 
 import com.uomaep.db.dto.UserDTO
+import com.uomaep.db.dto.UserDatabaseDTO
 import com.uomaep.db.mapper.UserMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -33,5 +34,13 @@ class UserService(val userMapper: UserMapper) {
             return Result.failure(Exception("로그인 실패"))
 
         return Result.success(target)
+    }
+
+    fun getDatabaseByUserId(userId: Int): List<UserDatabaseDTO> {
+        return userMapper.selectDatabaseByUserId(userId)
+    }
+
+    fun isExistDatabase(databaseName: String): Boolean {
+        return userMapper.selectDatabaseByDatabaseName(databaseName) != null
     }
 }

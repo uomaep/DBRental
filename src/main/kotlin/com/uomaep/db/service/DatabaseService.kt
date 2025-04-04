@@ -1,13 +1,19 @@
 package com.uomaep.db.service
 
 import com.uomaep.db.dto.DBCreateUserDTO
+import com.uomaep.db.dto.UserDTO
 import com.uomaep.db.mapper.MySQLMapper
+import com.uomaep.db.mapper.UserMapper
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
-class DatabaseService(val mysqlMapper: MySQLMapper) {
+class DatabaseService(
+    val mysqlMapper: MySQLMapper,
+    val userMapper: UserMapper
+) {
     fun createUser(user: DBCreateUserDTO): Result<Unit> {
-        if(mysqlMapper.isExistsUser(user.account) != 0) {
+        if(mysqlMapper.isExistsUser(user.account)) {
             return Result.failure(Exception("이미 존재합니다."))
         }
 
@@ -17,4 +23,17 @@ class DatabaseService(val mysqlMapper: MySQLMapper) {
 
         return Result.success(Unit)
     }
+
+    fun isExistDatabase(databaseName: String): Boolean {
+        return mysqlMapper.isExistsDatabase(databaseName)
+    }
+
+    fun createDatabase(databaseName: String, user: UserDTO): Result<Unit> {
+        return Result.runCatching {
+            userMapper.insertDatabase(databaseName, user.id!!)
+            mysqlMapper.createDatabase(databaseName)
+            mysqlMapper.grantPermission(databaseName, user.account)
+        }
+    }
+
 }

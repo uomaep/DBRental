@@ -4,10 +4,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.uomaep.db.mapper.MySQLMapper">
     <insert id="createUser" parameterType="UserDTO">
-        create user #{account} identified by #{password}
+        create user #{account} identified by #{password};
     </insert>
 
-    <select id="isExistsUser">
+    <select id="isExistsUser" resultType="boolean">
         select exists(select 1 from mysql.user where user = #{username}) as user_exists;
     </select>
+
+    <select id="isExistsDatabase" resultType="boolean">
+        select exists(select 1 from information_schema.schemata where schema_name = #{databaseName}) as db_exists;
+    </select>
+
+    <update id="createDatabase">
+        create database `${databaseName}`;
+    </update>
+
+    <update id="grantPermission">
+        grant all privileges on `${databaseName}`.* to `${account}`@`%`;
+    </update>
 </mapper>

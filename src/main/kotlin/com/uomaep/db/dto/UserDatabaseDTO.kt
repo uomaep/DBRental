@@ -1,7 +1,7 @@
 package com.uomaep.db.dto
 
-data class UserSchemaDTO(
+data class UserDatabaseDTO(
     val id: Int? = null,
-    val schemaName: String,
+    val databaseName: String,
     val userId: Int
 )

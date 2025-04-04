@@ -11,4 +11,18 @@
     <select id="selectUserByAccount" resultType="com.uomaep.db.dto.UserDTO">
         select * from `db-rental`.`user` where account = #{account};
     </select>
+
+    <select id="selectDatabaseByUserId" resultType="com.uomaep.db.dto.UserDatabaseDTO">
+        select * from `db-rental`.`user_database` where user_id = #{userId}
+    </select>
+
+    <select id="selectDatabaseByDatabaseName" resultType="com.uomaep.db.dto.UserDatabaseDTO">
+        select * from `db-rental`.`user_database` where database_name = #{databaseName}
+    </select>
+
+    <insert id="insertDatabase">
+        insert into `db-rental`.user_database(database_name, user_id)
+        values(#{databaseName}, #{userId})
+    </insert>
+
 </mapper>

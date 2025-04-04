@@ -8,5 +8,8 @@ import org.springframework.stereotype.Repository
 @Repository
 interface MySQLMapper {
     fun createUser(user: DBCreateUserDTO): Int
-    fun isExistsUser(username: String): Int
+    fun isExistsUser(username: String): Boolean
+    fun isExistsDatabase(databaseName: String): Boolean
+    fun createDatabase(databaseName: String): Int
+    fun grantPermission(databaseName: String, account: String)
 }
