@@ -38,6 +38,10 @@ class UserController(
             return "redirect:/user/login?msg=${"관리자에 의해 로그인이 차단되었습니다.".encodeURL()}"
         }
 
+        if(!isValidAccount(reqBody.account)) {
+            return "redirect:/user/login?msg=${"아이디 또는 비밀번호 형식이 올바르지 않습니다.".encodeURL()}"
+        }
+
         val result = userService.login(reqBody.account, reqBody.password)
         if(result.isFailure)
             return "redirect:/user/login?msg=${"로그인 실패".encodeURL()}"
@@ -70,6 +74,10 @@ class UserController(
             return "redirect:/user/login?msg=${"관리자에 의해 회원가입이 비활성화되었습니다.".encodeURL()}"
         }
 
+        if(isValidAccount(reqBody.account)) {
+            return "redirect:/user/login?msg=${"아이디 또는 비밀번호 형식이 올바르지 않습니다.".encodeURL()}"
+        }
+
         if(reqBody.password != reqBody.checkPassword) {
             return "redirect:/user/register?msg=${"비밀번호가 일치하지 않습니다.".encodeURL()}"
         }
@@ -83,5 +91,9 @@ class UserController(
             return "redirect:/user/register?msg?=${"회원가입 실패".encodeURL()}"
 
         return "redirect:/user/login?msg=${"회원가입 성공".encodeURL()}"
+    }
+
+    fun isValidAccount(account: String): Boolean {
+        return account.matches(Regex("^[a-zA-Z0-9]{4,20}$"))
     }
 }
