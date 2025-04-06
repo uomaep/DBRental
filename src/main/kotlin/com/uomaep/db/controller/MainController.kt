@@ -1,5 +1,6 @@
 package com.uomaep.db.controller
 
+import com.uomaep.db.configure.BlockSettings
 import com.uomaep.db.dto.UserDTO
 import com.uomaep.db.service.UserService
 import jakarta.servlet.http.HttpSession
@@ -22,6 +23,9 @@ class MainController(val userService: UserService) {
         model.addAttribute("databases", databases)
         model.addAttribute("userId", user.id)
         model.addAttribute("isAdmin", user.account == admin)
+        model.addAttribute("isBlockedLogin", BlockSettings.blockLogin)
+        model.addAttribute("isBlockedRegister", BlockSettings.blockRegister)
+        model.addAttribute("isBlockedCreateDatabase", BlockSettings.blockCreateDatabase)
 
         return "index"
     }

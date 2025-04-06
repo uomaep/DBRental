@@ -20,9 +20,9 @@
         <br>
         <div th:if="${isAdmin}" style="border: 1px solid gray; padding: 4px; margin-bottom: 4px;">
             <h3>관리자 기능</h3>
-            <button onclick="blockSignup()">회원가입 막기</button>
-            <button onclick="blockLogin()">로그인 막기</button>
-            <button onclick="blockDatabase()">데이터베이스 생성 막기</button>
+            <button onclick="blockRegister()">회원가입 <span th:text="${isBlockedRegister} ? '허용하기': '차단하기'"></span></button>
+            <button onclick="blockLogin()">로그인 <span th:text="${isBlockedLogin} ? '허용하기' : '차단하기'"></span></button>
+            <button onclick="blockCreateDatabase()">데이터베이스 생성 <span th:text="${isBlockedCreateDatabase} ? '허용하기' : '차단하기'"></span></button>
         </div>
         <form id="createForm">
             <label for="databaseName">데이터베이스 이름: </label>
@@ -99,15 +99,32 @@
                 });
         }
 
-        function blockSignup() {
-            alert("회원가입 차단 요청 보냄 (TODO: 구현 필요)");
-            // fetch("/admin/block-signup", { method: "POST" }) ...
+        function toggleBlock(endpoint, currentValue) {
+            fetch(`/admin/block/${endpoint}?value=${!currentValue}`, {
+                method: "POST"
+            })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.msg);
+                    location.reload();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("요청 실패");
+                });
+        }
+
+        function blockRegister() {
+            const current = [[${isBlockedRegister}]];
+            toggleBlock("register", current);
         }
         function blockLogin() {
-            alert("로그인 차단 요청 보냄 (TODO: 구현 필요)");
+            const current = [[${isBlockedLogin}]];
+            toggleBlock("login", current);
         }
-        function blockDatabase() {
-            alert("데이터베이스 차단 요청 보냄 (TODO: 구현 필요)");
+        function blockCreateDatabase() {
+            const current = [[${isBlockedCreateDatabase}]];
+            toggleBlock("createdatabase", current);
         }
 
     </script>
