@@ -39,8 +39,8 @@ class DatabaseService(
 
     fun drop(database: UserDatabaseDTO): Result<Unit> {
         return Result.runCatching {
-            userMapper.deleteDatabase(database.id!!, database.userId!!)
-            mysqlMapper.dropDatabase(database.databaseName!!)
+            userMapper.deleteDatabase(database.id!!, database.userId)
+            mysqlMapper.dropDatabase(database.databaseName)
         }
     }
 
