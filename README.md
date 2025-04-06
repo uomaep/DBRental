@@ -59,14 +59,13 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
 ```sql
-CREATE TABLE `user` (
+CREATE TABLE `user_database` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `account` varchar(100) NOT NULL,
-  `password` char(128) NOT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `database_name` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `user_id` int NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `user_unique` (`account`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `user_schema_unique` (`database_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
 
 #### application-database.properties
