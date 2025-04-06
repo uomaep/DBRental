@@ -44,6 +44,25 @@ DB 접속할 때 사용하게 될 계정과 비밀번호입니다.
 - application-database.properties
 - application-secure.properties
 
+#### application-database.properties
+```application-database.properties
+spring.datasource.url=jdbc:mysql://host:port/db-rental?allowMultiQueries=true
+spring.datasource.username=WAS용_DB_USER
+spring.datasource.password=WAS용_DB_PASSWORD
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+```
+
+#### application-secure.properties
+```application-secure.properties
+# 비밀번호 해시에 사용될 솔트값
+security.password.salt=
+
+# 관리자용 account, 이 값에 해당하는 유저가 로그인 시, 홈 화면에서 로그인, 회원가입, 데이터베이스 생성 차단/허용 버튼 활성화 함
+admin.account=
+```
+
+<img width="467" alt="스크린샷 2025-04-07 오전 12 16 37" src="https://github.com/user-attachments/assets/0502ff70-1897-4864-83de-f00843547efb" />
+
 ### 직접 서비스 시 만들어야 할 DB(db-rental) 테이블
 ```sql
 CREATE DATABASE `db-rental`;
@@ -67,22 +86,3 @@ CREATE TABLE `user_database` (
   UNIQUE KEY `user_schema_unique` (`database_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
-
-#### application-database.properties
-```application-database.properties
-spring.datasource.url=jdbc:mysql://host:port/db-rental?allowMultiQueries=true
-spring.datasource.username=WAS용_DB_USER
-spring.datasource.password=WAS용_DB_PASSWORD
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-```
-
-#### application-secure.properties
-```application-secure.properties
-# 비밀번호 해시에 사용될 솔트값
-security.password.salt=
-
-# 관리자용 account, 이 값에 해당하는 유저가 로그인 시, 홈 화면에서 로그인, 회원가입, 데이터베이스 생성 차단/허용 버튼 활성화 함
-admin.account=
-```
-
-<img width="467" alt="스크린샷 2025-04-07 오전 12 16 37" src="https://github.com/user-attachments/assets/0502ff70-1897-4864-83de-f00843547efb" />
