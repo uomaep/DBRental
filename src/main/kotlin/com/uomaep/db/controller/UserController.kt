@@ -94,6 +94,6 @@ class UserController(
     }
 
     fun isValidAccount(account: String): Boolean {
-        return account.matches(Regex("^[a-zA-Z0-9]{4,20}$"))
+        return account.matches(Regex("^[^\\\\s]{4,20}\$"))
     }
 }
