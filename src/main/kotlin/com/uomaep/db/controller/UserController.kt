@@ -74,7 +74,7 @@ class UserController(
             return "redirect:/user/login?msg=${"관리자에 의해 회원가입이 비활성화되었습니다.".encodeURL()}"
         }
 
-        if(isValidAccount(reqBody.account)) {
+        if(!isValidAccount(reqBody.account)) {
             return "redirect:/user/login?msg=${"아이디 또는 비밀번호 형식이 올바르지 않습니다.".encodeURL()}"
         }
 
@@ -94,6 +94,6 @@ class UserController(
     }
 
     fun isValidAccount(account: String): Boolean {
-        return account.matches(Regex("^[^\\\\s]{4,20}\$"))
+        return account.matches(Regex("^[^\\s]{4,20}$"))
     }
 }
